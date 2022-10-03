@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# forwarder.py - forwards IoT sensor data from MQTT to Honghu
+# bridge.py - A bridge which forwards IoT sensor data from MQTT to Honghu.
 #
 # Copyright (C) 2022 Jason <neulf@hotmail.com>
 #
