@@ -36,18 +36,16 @@ class HonghuStore(MessageStore):
         self.url = f"http://{host}:{port}/api/data/v1.0/data/ingestions/events?endpoint={hei_name}&event_set={event_set}&_datatype=json"
 
     def store_msg(self, node_name, event_name, data):
-        if not isinstance(data, dict):
-            raise ValueError('data must be given as dict!')
-        honghu_msg = {
-            'measurement': event_name,
-            'tags': {
-                'sensor_node': node_name,
-            },
-            'fields': data
+        honghu_msg = data
+
+        headers = {
+            "Content-Type": "text/plain",
+            "Authorization": 'Bearer ' + self.token
         }
         self.logger.debug("Writing Honghu Event: %s", honghu_msg)
         try:
-            res = requests.post(url=self.url, data=honghu_msg, headers="")
+            res = requests.post(url=self.url, data=honghu_msg, headers=headers)
+            # print(res.raw)
 
         except requests.exceptions.ConnectionError as e:
             self.logger.exception(e)
@@ -111,31 +109,7 @@ class MQTTSource(MessageSource):
                     self.node_name)
             event_name = match.group('event_name')
 
-            value = msg.payload
-
-            is_value_json_dict = False
-            try:
-                stored_message = json.loads(value)
-                is_value_json_dict = isinstance(stored_message, dict)
-            except ValueError:
-                pass
-
-            if is_value_json_dict:
-                for key in stored_message.keys():
-                    try:
-                        stored_message[key] = float(stored_message[key])
-                    except ValueError:
-                        pass
-            else:
-                # if message is not a JSON DICT, only then check if we should stringify the value
-                if event_name in self.stringify:
-                    value = str(value)
-                else:
-                    try:
-                        value = float(value)
-                    except ValueError:
-                        pass
-                stored_message = {'value': value}
+            stored_message = msg.payload
 
             for store in self.stores:
                 store.store_msg(node_name, event_name, stored_message)
