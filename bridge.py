@@ -92,7 +92,7 @@ class MQTTSource(MessageSource):
                 client.subscribe(topic)
 
         def on_message(client, userdata, msg):
-            self.logger.debug(
+            self.logger.info(
                 "Received MQTT message for topic %s with payload %s", msg.topic, msg.payload)
             token_pattern = '(?:\w|-|\.)+'
             regex = re.compile(
