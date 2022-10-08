@@ -131,7 +131,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='MQTT to Honghu bridge for IOT data.')
     parser.add_argument('--mqtt-host', required=True, help='MQTT host')
-    parser.add_argument('--mqtt-port', default="18080", help='MQTT port')
+    parser.add_argument('--mqtt-port', default="15438", help='MQTT port')
     parser.add_argument('--mqtt-username', required=True, help='MQTT username')
     parser.add_argument('--mqtt-password', default="18080", help='MQTT password')
     parser.add_argument('--honghu-host', required=True, help='Honghu host')
