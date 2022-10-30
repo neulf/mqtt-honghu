@@ -13,16 +13,15 @@ The console show some logs as follows:
     INFO:bridge.MQTTSource:Received MQTT message for topic /node1/pcs with payload b'{\n"temp": "36.1"\n}'
 
 Configuration keys and default values:
-
-Key	Default	Description
-pidfile	empty	If set to a path, write PID file to that location
-mqtt-host	localhost	Hostname or IP address for MQTT broker
-mqtt-port	15438	Port for MQTT broker
-mqtt-useranme	empty	Username for MQTT authentication
-mqtt-password	empty	Password for MQTT authentication
-honghu-host	localhost	Hostname or IP address of Honghu
-honghu-port	18080	Port for InfluxDB
-honghu-token	empty	Token for authenticating against Honghu Hei
-honghu-hei	empty	Hei name for Honghu
-event-set	empty	Event set name
-node-name	empty	Node name
+| Key | Default | Description |
+| ---- | ---- | ---- |
+| mqtt-host | localhost | Hostname or IP address for MQTT broker |
+| mqtt-port | 15438 | Port for MQTT broker|
+| mqtt-useranme | empty | Username for MQTT authentication|
+| mqtt-password | empty | Password for MQTT authentication|
+| honghu-host | localhost | Hostname or IP address of Honghu|
+| honghu-port | 18080 | Port for InfluxDB|
+| honghu-token | empty | Token for authenticating against Honghu Hei|
+| honghu-hei | empty | Hei name for Honghu|
+| event-set | empty | Event set name|
+| node-name | empty | Node name|
