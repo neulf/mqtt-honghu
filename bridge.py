@@ -9,7 +9,6 @@
 import argparse
 import paho.mqtt.client as mqtt
 import requests
-import json
 import re
 import logging
 import sys
