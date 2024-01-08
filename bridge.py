@@ -85,7 +85,7 @@ class MQTTSource(MessageSource):
             self.logger.info("Connected with result code  %s", rc)
             # subscribe to /node_name/wildcard
             for node_name in self.node_names:
-                topic = "/{node_name}/#".format(node_name=node_name)
+                topic = "{node_name}".format(node_name=node_name)
                 self.logger.info(
                     "Subscribing to topic %s for node_name %s", topic, node_name)
                 client.subscribe(topic)
