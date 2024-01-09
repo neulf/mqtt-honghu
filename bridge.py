@@ -7,11 +7,11 @@
 #
 
 import argparse
-import paho.mqtt.client as mqtt
-import requests
 import re
 import logging
 import sys
+import paho.mqtt.client as mqtt
+import requests
 import requests.exceptions
 
 
@@ -85,28 +85,32 @@ class MQTTSource(MessageSource):
             self.logger.info("Connected with result code  %s", rc)
             # subscribe to /node_name/wildcard
             for node_name in self.node_names:
-                topic = "/{node_name}/#".format(node_name=node_name)
+                topic = "{node_name}".format(node_name=node_name)
                 self.logger.info(
                     "Subscribing to topic %s for node_name %s", topic, node_name)
                 client.subscribe(topic)
 
         def on_message(client, userdata, msg):
+            print("data received.")
             self.logger.info(
                 "Received MQTT message for topic %s with payload %s", msg.topic, msg.payload)
-            token_pattern = '(?:\w|-|\.)+'
-            regex = re.compile(
-                '/(?P<node_name>' + token_pattern + ')/(?P<event_name>' + token_pattern + ')/?')
-            match = regex.match(msg.topic)
-            if match is None:
-                self.logger.warn(
-                    "Could not extract node name or measurement name from topic %s", msg.topic)
-                return
-            node_name = match.group('node_name')
-            if node_name not in self.node_names:
-                self.logger.warn(
-                    "Extract node_name %s from topic, but requested to receive messages for node_name %s", node_name,
-                    self.node_name)
-            event_name = match.group('event_name')
+
+            # token_pattern = '(?:\w|-|\.)+'
+            # regex = re.compile(
+            #     '/(?P<node_name>' + token_pattern + ')/(?P<event_name>' + token_pattern + ')/?')
+            # match = regex.match(msg.topic)
+            # if match is None:
+            #     self.logger.warn(
+            #         "Could not extract node name or measurement name from topic %s", msg.topic)
+            #     return
+            # node_name = match.group('node_name')
+            # if node_name not in self.node_names:
+            #     self.logger.warn(
+            #         "Extract node_name %s from topic, but requested to receive messages for node_name %s", node_name,
+            #         self.node_name)
+            # event_name = match.group('event_name')
+            node_name = msg.topic
+            event_name = msg.topic
 
             stored_message = msg.payload
 
@@ -145,7 +149,7 @@ def main():
     parser.add_argument('--stringify-values-for-measurements', required=False,
                         help='Force str() on measurements of the given name', action="append")
     parser.add_argument('--verbose', help='Enable verbose output to stdout',
-                        default=False, action='store_true')
+                        default=True, action='store_true')
     args = parser.parse_args()
 
     if args.verbose:
