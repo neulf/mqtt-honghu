@@ -98,8 +98,7 @@ class MQTTSource(MessageSource):
                 '/(?P<node_name>' + token_pattern + ')/(?P<event_name>' + token_pattern + ')/?')
             match = regex.match(msg.topic)
             if match is None:
-                self.logger.warn(
-                    "Could not extract node name or measurement name from topic %s", msg.topic)
+                self.logger.info("Could not extract node name or measurement name from topic %s", msg.topic)
                 return
             node_name = match.group('node_name')
             if node_name not in self.node_names:
