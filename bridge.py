@@ -42,8 +42,10 @@ class HonghuStore(MessageStore):
             "Authorization": 'Bearer ' + self.token
         }
         self.logger.debug("Writing Honghu Event: %s", honghu_msg)
+        post_url = "{}&_source={}".format(self.url, node_name)
+
         try:
-            res = requests.post(url=self.url, data=honghu_msg, headers=headers)
+            res = requests.post(url=post_url, data=honghu_msg, headers=headers)
             # print(res.raw)
 
         except requests.exceptions.ConnectionError as e:
