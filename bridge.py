@@ -17,7 +17,7 @@ import requests.exceptions
 
 class MessageStore(object):
 
-    def store_msg(self, node_name, event_name, value):
+    def store_msg(self, node_name, value):
         raise NotImplementedError()
 
 
@@ -25,16 +25,18 @@ class HonghuStore(MessageStore):
     logger = logging.getLogger("bridge.HonghuStore")
     url = ""
     token = ""
+    event_set = ""
 
     def __init__(self, host, port, token, hei_name, event_set):
 
         hei_name = hei_name
         event_set = event_set
+        self.event_set = event_set
 
         self.token = token
         self.url = f"http://{host}:{port}/api/data/v1.0/data/ingestions/events?endpoint={hei_name}&event_set={event_set}&_datatype=json"
 
-    def store_msg(self, node_name, event_name, data):
+    def store_msg(self, node_name, data):
         honghu_msg = data
 
         headers = {
@@ -97,6 +99,10 @@ class MQTTSource(MessageSource):
             self.logger.info(
                 "Received MQTT message for topic %s with payload %s", msg.topic, msg.payload)
 
+            if msg.topic.startswith("$"):
+                print("system topic.")
+                return
+
             # token_pattern = '(?:\w|-|\.)+'
             # regex = re.compile(
             #     '/(?P<node_name>' + token_pattern + ')/(?P<event_name>' + token_pattern + ')/?')
@@ -112,12 +118,12 @@ class MQTTSource(MessageSource):
             #         self.node_name)
             # event_name = match.group('event_name')
             node_name = msg.topic
-            event_name = msg.topic
+            event_name = ""
 
             stored_message = msg.payload
 
             for store in self.stores:
-                store.store_msg(node_name, event_name, stored_message)
+                store.store_msg(node_name, stored_message)
 
         self.client.on_connect = on_connect
         self.client.on_message = on_message
